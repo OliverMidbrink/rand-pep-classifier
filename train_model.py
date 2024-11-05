@@ -11,6 +11,8 @@ n_CV_splits = dataset.n_CV_splits
 training_results = {}
 device = torch.device("cpu")
 
+model_name = "micro"
+
 for split_idx in tqdm(range(n_CV_splits), desc="Splits"):
     
     train, test = dataset.get_train_test(split_idx)
@@ -45,6 +47,8 @@ for split_idx in tqdm(range(n_CV_splits), desc="Splits"):
                 sub_seq = seq[:char_idx]
                 #print("sub_seq: ", sub_seq)
                 # Pad the sequence with "+" to make it 100 characters long
+                if len(sub_seq) > 100:
+                    sub_seq = sub_seq[-100:]
                 input_seq = "+" * (100 - len(sub_seq)) + sub_seq
 
                 # Convert the sequence to one hot
@@ -91,6 +95,8 @@ for split_idx in tqdm(range(n_CV_splits), desc="Splits"):
             for char_idx in range(len(seq)):
                 sub_seq = seq[:char_idx]
                 # Pad the sequence with "+" to make it 100 characters long
+                if len(sub_seq) > 100:
+                    sub_seq = sub_seq[-100:]
                 input_seq = "+" * (100 - len(sub_seq)) + sub_seq
 
                 # Convert the sequence to one hot
@@ -116,6 +122,5 @@ for split_idx in tqdm(range(n_CV_splits), desc="Splits"):
         with open("training_results.json", "w") as f:
             json.dump(training_results, f)
 
-        if epoch == 0:
-            # Save the model
-            torch.save(model_, "model_" + str(split_idx) + ".pt")
+        # Save the model
+        torch.save(model_, model_name + "_ep_" + str(epoch) + ".pt")

@@ -20,6 +20,7 @@ def filtered(item): # This will take in an amino acid sequece and filter it.
 
 
 def get_filtered_seq_list():
+    """
     # Read the data from the xlsx file
     df = pd.read_excel('Luzeena_sORF_Database_2024.xlsx')
 
@@ -27,7 +28,11 @@ def get_filtered_seq_list():
 
     filtered_ = [filtered(item) for item in list_ if filtered(item) != ""]
 
-    filtered_ = list(set(filtered_))
+    """
+    with open("filtered.txt", "r") as f:
+        list_ = [item.replace("\n", "") for item in f.readlines()]
+
+    filtered_ = list(set(list_))
 
     return filtered_
 

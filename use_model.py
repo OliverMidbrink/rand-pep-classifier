@@ -4,17 +4,19 @@ import model
 import tools
 import time
 import torch.nn.functional as F
+from tqdm import tqdm
 
-model_file = "model_0.pt"
+model_file = "micro_0.pt"
+output_name = "new_synth_pep_file.txt"
 
 # Load the model as full model not state dict
 model_ = torch.load(model_file)
 
 original_seqs = tools.get_filtered_seq_list()
 
-n_seqs = 9600 - 9300
+n_seqs = 400
 
-for x in range(n_seqs):
+for x in tqdm(range(n_seqs), desc="Generating"):
     seq = ""
 
     while True:
@@ -45,12 +47,5 @@ for x in range(n_seqs):
         if next_char == "|":
             break
     
-    print("Sequence: ", seq)
-    if seq in original_seqs:
-        print("True")
-    else:
-        print("False")
-    print("")
-
-    with open("synth_seqs.txt", "a") as f:
+    with open(output_name, "a") as f:
         f.write(seq + "\n")
